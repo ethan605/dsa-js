@@ -13,7 +13,7 @@
     }
   },
   "lint-staged": {
-    "src/**/*.(js|json|md)": [
+    "(data-structures|problems)/**/*.(js|json|md)": [
       "prettier --write",
       "git add"
     ]
