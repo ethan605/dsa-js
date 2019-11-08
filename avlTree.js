@@ -1,4 +1,8 @@
 class AVLNode {
+  static getHeight(node) {
+    return node == null ? 0 : node.height;
+  }
+
   constructor(value) {
     this.value = value;
     this.height = 1;
@@ -6,20 +10,18 @@ class AVLNode {
     this.right = null;
   }
 
-  get leftHeight() {
-    return this.left == null ? 0 : this.left.height;
-  }
-
-  get rightHeight() {
-    return this.right == null ? 0 : this.right.height;
-  }
-
   get balance() {
-    return this.leftHeight - this.rightHeight;
+    return AVLNode.getHeight(this.left) - AVLNode.getHeight(this.right);
   }
 
-  copyNode(otherNode) {
+  copyValue(otherNode) {
     this.value = otherNode.value;
+  }
+
+  swapValue(otherNode) {
+    const temp = this.value;
+    this.value = otherNode.value;
+    otherNode.value = temp;
   }
 
   minSuccessor() {
@@ -44,7 +46,8 @@ class AVLNode {
       }
     }
 
-    this.height = Math.max(this.leftHeight, this.rightHeight) + 1;
+    this.height = Math.max(AVLNode.getHeight(this.left), AVLNode.getHeight(this.right)) + 1;
+    this.rebalance(value);
   }
 
   remove(value) {
@@ -69,7 +72,7 @@ class AVLNode {
     // Remove self which has only right child
     if (this.left == null) {
       const rightChild = this.right;
-      this.copyNode(rightChild);
+      this.copyValue(rightChild);
       delete this;
       return rightChild;
     }
@@ -77,16 +80,71 @@ class AVLNode {
     // Remove self which has only left child
     if (this.right == null) {
       const leftChild = this.left;
-      this.copyNode(leftChild);
+      this.copyValue(leftChild);
       delete this;
       return leftChild;
     }
 
     // Remove self which has both children
     let minSuccessor = this.right.minSuccessor();
-    this.copyNode(minSuccessor);
+    this.copyValue(minSuccessor);
     this.right = this.right.remove(minSuccessor.value);
     return this;
+  }
+
+  rebalance(value) {
+    // Still balanced
+    if (this.balance >= -1 && this.balance <= 1) return;
+
+    if (this.balance > 1) {
+      if (this.left.value > value) {
+        // Left-Left case - rotate right
+        this.rotateRight();
+      } else {
+        // Left-Right case - rotate left at this.left
+        this.left.rotateLeft();
+        this.rotateRight();
+      }
+    }
+
+    if (this.balance < -1) {
+      if (this.right.value < value) {
+        // Right-Right case - rotate left at this.right
+        this.rotateLeft();
+      } else {
+        // Right-Left case - rotate right at this.right
+        this.right.rotateRight();
+        this.rotateLeft();
+      }
+    }
+
+    this.height = Math.max(AVLNode.getHeight(this.left), AVLNode.getHeight(this.right)) + 1;
+  }
+
+  rotateLeft() {
+    const temp = this.right;
+
+    this.right = temp.right;
+    temp.right = temp.left;
+    temp.left = this.left;
+    this.left = temp;
+
+    this.swapValue(temp);
+
+    temp.height = Math.max(AVLNode.getHeight(temp.left), AVLNode.getHeight(temp.right)) + 1;
+  }
+
+  rotateRight() {
+    const temp = this.left;
+
+    this.left = temp.left;
+    temp.left = temp.right;
+    temp.right = this.right;
+    this.right = temp;
+
+    this.swapValue(temp);
+
+    temp.height = Math.max(AVLNode.getHeight(temp.left), AVLNode.getHeight(temp.right)) + 1;
   }
 
   inOrderTraverse() {
@@ -145,18 +203,18 @@ class AVLTree {
   }
 }
 
-function binarySearch() {
-  const bst = new AVLTree([10, 1, 3, 5, 4, 6, 13, 9, 8, 15, 17, 11, 12, 18, 16]);
-  console.log(bst.inOrderTraverse());
-  // console.log(bst.toString());
+function avlSearch() {
+  const avl = new AVLTree([10, 1, 3, 5, 4, 6, 13, 9, 8, 15, 17, 11, 12, 18, 16]);
+  console.log(avl.inOrderTraverse());
+  // console.log(avl.toString());
 
-  bst.insert(14);
-  console.log(bst.inOrderTraverse());
-  // console.log(bst.toString());
+  avl.insert(14);
+  console.log(avl.inOrderTraverse());
+  console.log(avl.toString());
 
-  bst.remove(13);
-  console.log(bst.inOrderTraverse());
-  console.log(bst.toString());
+  // avl.remove(13);
+  // console.log(avl.inOrderTraverse());
+  // console.log(avl.toString());
 }
 
-binarySearch();
+avlSearch();
