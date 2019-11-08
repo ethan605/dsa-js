@@ -1,7 +1,10 @@
 class Heap {
   constructor(values) {
     this.container = [];
-    values.forEach(value => this.push(value));
+
+    if (values) {
+      values.forEach(value => this.push(value));
+    }
   }
 
   compareValue(firstIndex, secondIndex) {
@@ -11,6 +14,10 @@ class Heap {
     if (first < second) return -1;
     if (first > second) return 1;
     return 0;
+  }
+
+  get size() {
+    return this.container.length;
   }
 
   getParentIndex(index) {
