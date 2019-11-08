@@ -70,9 +70,10 @@ class BinarySearchNode {
     }
 
     // Remove self which has both children
-    const minSuccessor = this.minSuccessor();
+    let minSuccessor = this.right.minSuccessor();
     this.copyNode(minSuccessor);
     this.right = this.right.remove(minSuccessor.value);
+    return this;
   }
 
   inOrderTraverse() {
@@ -128,15 +129,15 @@ class BinarySearchTree {
 }
 
 function binarySearch() {
-  const bst = new BinarySearchTree([10, 1, 3, 5, 4, 6, 13, 9, 8, 15, 17]);
+  const bst = new BinarySearchTree([10, 1, 3, 5, 4, 6, 13, 9, 8, 15, 17, 11, 12, 18, 16]);
   console.log(bst.inOrderTraverse());
   // console.log(bst.toString());
 
-  bst.insert(12);
+  bst.insert(14);
   console.log(bst.inOrderTraverse());
   // console.log(bst.toString());
 
-  bst.remove(8);
+  bst.remove(13);
   console.log(bst.inOrderTraverse());
   // console.log(bst.toString());
 }
