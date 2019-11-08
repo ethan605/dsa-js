@@ -1,5 +1,6 @@
 const { AVLTree } = require('./data-structures/AVLTree');
 const { BinarySearchTree } = require('./data-structures/BinarySearchTree');
+const { MaxHeap, MinHeap } = require('./data-structures/Heaps');
 
 function binarySearch() {
   const bst = new BinarySearchTree([10, 1, 3, 5, 4, 6, 13, 9, 8, 15, 17, 11, 12, 18, 16]);
@@ -29,7 +30,20 @@ function avlSearch() {
   console.log(avl.inOrderTraverse());
 }
 
+function heaps() {
+  const maxHeap = new MaxHeap([1, 9, 3, 7, 8, 4, 2, 10, 16, 14]);
+  console.log(maxHeap.container);
+  console.log(maxHeap.kthValues(4));
+  console.log(maxHeap.container);
+
+  const minHeap = new MinHeap([1, 9, 3, 7, 8, 4, 2, 10, 16, 14]);
+  console.log(minHeap.container);
+  console.log(minHeap.kthValues(4));
+  console.log(minHeap.container);
+}
+
 module.exports = {
   avlSearch,
   binarySearch,
+  heaps,
 };
