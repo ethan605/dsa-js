@@ -208,17 +208,4 @@ class AVLTree {
   }
 }
 
-function avlSearch() {
-  const avl = new AVLTree([10, 1, 3, 5, 4, 6, 13, 9, 8, 15, 17, 11, 12, 18, 16]);
-  console.log(avl.inOrderTraverse());
-
-  avl.insert(14);
-  avl.insert(12.5);
-  avl.insert(14.5);
-  console.log(avl.inOrderTraverse());
-
-  avl.remove(10);
-  console.log(avl.inOrderTraverse());
-}
-
-avlSearch();
+module.exports = AVLTree;
