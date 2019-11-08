@@ -2,52 +2,27 @@
  * See more: https://leetcode.com/problems/reorder-data-in-log-files/
  */
 
-class LogNode {
-  constructor(value) {
-    this.value = value;
-    this.left = null;
-    this.right = null;
-  }
+const { MinHeap } = require('../data-structures/Heaps');
 
-  compareValue(otherValue) {
-    const { content, prefix } = this.value;
-    const { content: otherContent, prefix: otherPrefix } = otherValue;
+class LogsHeap extends MinHeap {
+  compareValue(firstIndex, secondIndex) {
+    const first = this.container[firstIndex];
+    const second = this.container[secondIndex];
 
-    // console.log(content, otherContent, content < otherContent, content > otherContent);
+    if (first == null && second == null) return 0;
+    if (first == null) return -1;
+    if (second == null) return 1;
 
-    if (content < otherContent) return -1;
-    if (content > otherContent) return 1;
+    const { content: firstContent, prefix: firstPrefix } = first;
+    const { content: secondContent, prefix: secondPrefix } = second;
 
-    if (prefix < otherPrefix) return -1;
-    if (prefix > otherPrefix) return 1;
+    if (firstContent < secondContent) return -1;
+    if (firstContent > secondContent) return 1;
+
+    if (firstPrefix < secondPrefix) return -1;
+    if (firstPrefix > secondPrefix) return 1;
 
     return 0;
-  }
-
-  insert(value) {
-    // Insert left
-    if (this.compareValue(value) > 0) {
-      if (this.left == null) {
-        this.left = new LogNode(value);
-      } else {
-        this.left.insert(value);
-      }
-
-      return;
-    }
-
-    // Insert right
-    if (this.right == null) {
-      this.right = new LogNode(value);
-    } else {
-      this.right.insert(value);
-    }
-  }
-
-  inOrderTraverse() {
-    const leftTraverse = this.left == null ? [] : this.left.inOrderTraverse();
-    const rightTraverse = this.right == null ? [] : this.right.inOrderTraverse();
-    return [...leftTraverse, this.value, ...rightTraverse];
   }
 }
 
@@ -59,24 +34,22 @@ function extractLogData(log) {
 }
 
 function reorderLogFiles(logs) {
-  let lettersLogRoot;
+  // let lettersLogRoot;
+  const logsHeap = new LogsHeap();
   const digitsLogs = [];
 
   logs.forEach(log => {
     const { content, prefix, isLettersLog } = extractLogData(log);
 
     if (isLettersLog) {
-      if (lettersLogRoot == null) {
-        lettersLogRoot = new LogNode({ content, prefix });
-      } else {
-        lettersLogRoot.insert({ content, prefix });
-      }
+      logsHeap.push({ content, prefix });
     } else {
       digitsLogs.push({ content, prefix });
     }
   });
 
-  const sortedLettersLogs = lettersLogRoot.inOrderTraverse();
+  // const sortedLettersLogs = lettersLogRoot.inOrderTraverse();
+  const sortedLettersLogs = logsHeap.kthValues(logsHeap.size);
   return sortedLettersLogs.concat(digitsLogs).map(({ content, prefix }) => `${prefix} ${content}`);
 }
 
