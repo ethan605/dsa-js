@@ -104,10 +104,10 @@ class BinarySearchTree {
     values.forEach(value => {
       if (this.root == null) {
         this.root = new BinarySearchNode(value);
-        return;
       }
-
-      this.root.insert(value);
+      {
+        this.root.insert(value);
+      }
     });
   }
 

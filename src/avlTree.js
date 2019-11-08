@@ -185,10 +185,9 @@ class AVLTree {
     values.forEach(value => {
       if (this.root == null) {
         this.root = new AVLNode(value);
-        return;
+      } else {
+        this.root.insert(value);
       }
-
-      this.root.insert(value);
     });
   }
 
