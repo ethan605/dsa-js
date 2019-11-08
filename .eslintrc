@@ -1,0 +1,14 @@
+{
+  "env": {
+    "jest": true,
+    "node": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 10
+  },
+  "extends": ["eslint:recommended", "plugin:prettier/recommended", "prettier/standard"],
+  "plugins": ["prettier"],
+  "rules": {
+    "prettier/prettier": ["error", { "trailingComma": "es5", "tabWidth": 2, "singleQuote": true, "printWidth": 120 }]
+  }
+}
