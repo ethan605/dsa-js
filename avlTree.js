@@ -47,19 +47,21 @@ class AVLNode {
     }
 
     this.height = Math.max(AVLNode.getHeight(this.left), AVLNode.getHeight(this.right)) + 1;
-    this.rebalance(value);
+    this.rebalance();
   }
 
   remove(value) {
     // Remove left
     if (this.value > value) {
       this.left = this.left.remove(value);
+      this.rebalance();
       return this;
     }
 
     // Remove right
     if (this.value < value) {
       this.right = this.right.remove(value);
+      this.rebalance();
       return this;
     }
 
@@ -87,17 +89,20 @@ class AVLNode {
 
     // Remove self which has both children
     let minSuccessor = this.right.minSuccessor();
+    console.log('minSuccessor:', minSuccessor);
     this.copyValue(minSuccessor);
     this.right = this.right.remove(minSuccessor.value);
+    this.rebalance();
     return this;
   }
 
-  rebalance(value) {
+  rebalance() {
     // Still balanced
     if (this.balance >= -1 && this.balance <= 1) return;
 
     if (this.balance > 1) {
-      if (this.left.value > value) {
+      // if (this.left.value > value) {
+      if (this.left.balance > 0) {
         // Left-Left case - rotate right
         this.rotateRight();
       } else {
@@ -108,7 +113,8 @@ class AVLNode {
     }
 
     if (this.balance < -1) {
-      if (this.right.value < value) {
+      // if (this.right.value < value) {
+      if (this.right.balance < 0) {
         // Right-Right case - rotate left at this.right
         this.rotateLeft();
       } else {
@@ -206,15 +212,14 @@ class AVLTree {
 function avlSearch() {
   const avl = new AVLTree([10, 1, 3, 5, 4, 6, 13, 9, 8, 15, 17, 11, 12, 18, 16]);
   console.log(avl.inOrderTraverse());
-  // console.log(avl.toString());
 
   avl.insert(14);
+  avl.insert(12.5);
+  avl.insert(14.5);
   console.log(avl.inOrderTraverse());
-  console.log(avl.toString());
 
-  // avl.remove(13);
-  // console.log(avl.inOrderTraverse());
-  // console.log(avl.toString());
+  avl.remove(10);
+  console.log(avl.inOrderTraverse());
 }
 
 avlSearch();
