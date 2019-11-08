@@ -14,8 +14,10 @@ class AVLNode {
     return AVLNode.getHeight(this.left) - AVLNode.getHeight(this.right);
   }
 
-  copyValue(otherNode) {
-    this.value = otherNode.value;
+  compareValue(otherValue) {
+    if (this.value < otherValue) return -1;
+    if (this.value > otherValue) return 1;
+    return 0;
   }
 
   swapValue(otherNode) {
@@ -31,7 +33,7 @@ class AVLNode {
 
   insert(value) {
     // Insert left
-    if (this.value > value) {
+    if (this.compareValue(value) > 0) {
       if (this.left == null) {
         this.left = new AVLNode(value);
       } else {
@@ -52,14 +54,14 @@ class AVLNode {
 
   remove(value) {
     // Remove left
-    if (this.value > value) {
+    if (this.compareValue(value) > 0) {
       this.left = this.left.remove(value);
       this.rebalance();
       return this;
     }
 
     // Remove right
-    if (this.value < value) {
+    if (this.compareValue(value) < 0) {
       this.right = this.right.remove(value);
       this.rebalance();
       return this;
@@ -74,7 +76,7 @@ class AVLNode {
     // Remove self which has only right child
     if (this.left == null) {
       const rightChild = this.right;
-      this.copyValue(rightChild);
+      this.value = rightChild.value;
       delete this;
       return rightChild;
     }
@@ -82,15 +84,14 @@ class AVLNode {
     // Remove self which has only left child
     if (this.right == null) {
       const leftChild = this.left;
-      this.copyValue(leftChild);
+      this.value = leftChild.value;
       delete this;
       return leftChild;
     }
 
     // Remove self which has both children
     let minSuccessor = this.right.minSuccessor();
-    console.log('minSuccessor:', minSuccessor);
-    this.copyValue(minSuccessor);
+    this.value = minSuccessor.value;
     this.right = this.right.remove(minSuccessor.value);
     this.rebalance();
     return this;
@@ -208,4 +209,7 @@ class AVLTree {
   }
 }
 
-module.exports = AVLTree;
+module.exports = {
+  AVLNode,
+  AVLTree,
+};

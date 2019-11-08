@@ -5,8 +5,10 @@ class BinarySearchNode {
     this.right = null;
   }
 
-  copyNode(otherNode) {
-    this.value = otherNode.value;
+  compareValue(otherValue) {
+    if (this.value < otherValue) return -1;
+    if (this.value > otherValue) return 1;
+    return 0;
   }
 
   minSuccessor() {
@@ -16,7 +18,7 @@ class BinarySearchNode {
 
   insert(value) {
     // Insert left
-    if (this.value > value) {
+    if (this.compareValue(value) > 0) {
       if (this.left == null) {
         this.left = new BinarySearchNode(value);
       } else {
@@ -36,13 +38,13 @@ class BinarySearchNode {
 
   remove(value) {
     // Remove left
-    if (this.value > value) {
+    if (this.compareValue(value) > 0) {
       this.left = this.left.remove(value);
       return this;
     }
 
     // Remove right
-    if (this.value < value) {
+    if (this.compareValue(value) < 0) {
       this.right = this.right.remove(value);
       return this;
     }
@@ -56,7 +58,7 @@ class BinarySearchNode {
     // Remove self which has only right child
     if (this.left == null) {
       const rightChild = this.right;
-      this.copyNode(rightChild);
+      this.value = rightChild.value;
       delete this;
       return rightChild;
     }
@@ -64,14 +66,14 @@ class BinarySearchNode {
     // Remove self which has only left child
     if (this.right == null) {
       const leftChild = this.left;
-      this.copyNode(leftChild);
+      this.value = leftChild.value;
       delete this;
       return leftChild;
     }
 
     // Remove self which has both children
     let minSuccessor = this.right.minSuccessor();
-    this.copyNode(minSuccessor);
+    this.value = minSuccessor.value;
     this.right = this.right.remove(minSuccessor.value);
     return this;
   }
@@ -104,8 +106,7 @@ class BinarySearchTree {
     values.forEach(value => {
       if (this.root == null) {
         this.root = new BinarySearchNode(value);
-      }
-      {
+      } else {
         this.root.insert(value);
       }
     });
@@ -128,4 +129,7 @@ class BinarySearchTree {
   }
 }
 
-module.exports = BinarySearchTree;
+module.exports = {
+  BinarySearchNode,
+  BinarySearchTree,
+};
